@@ -12,4 +12,5 @@ export interface IJobApplicationInterface {
   prefferedLocation: string,
   heardFrom: HeardFrom,
   noticePeriod: number,
+  file?: File,
 }

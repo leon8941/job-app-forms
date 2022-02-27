@@ -1,9 +1,11 @@
 import express from 'express'
+import multer from 'multer'
 
 import { IJobApplicationInterface } from '../dto/IJobApplication'
 import { getJobs, getLocations, getHeardFroms, createJobApplication } from '../services'
 
 const router = express.Router()
+const upload = multer().single("resume");
 
 router.get('/jobs', (_, res) => {
   getJobs().then((dbResponse) => {
@@ -34,7 +36,7 @@ router.get('/heardFroms', (_, res) => {
   }
 })
 
-router.post('/submitJobApplication', (req, res) =>  {
+router.post('/submitJobApplication', async (req, res) =>  {
   const {
     firstName,
     lastName,
@@ -47,26 +49,37 @@ router.post('/submitJobApplication', (req, res) =>  {
     prefferedLocation,
     heardFrom,
     noticePeriod,
+    file
   } : IJobApplicationInterface = req.body
 
-  createJobApplication({
-    firstName,
-    lastName,
-    email,
-    contactNo,
-    addressLine1,
-    addressLine2,
-    job,
-    noOfYearExp,
-    prefferedLocation,
-    heardFrom,
-    noticePeriod,
-  }).then(() => {
-    res.sendStatus(200)
-  }).catch((error) => {
-    console.log(error)
+  console.log('FIles', file)
+
+  try {
+    const response = await createJobApplication({
+      firstName,
+      lastName,
+      email,
+      contactNo,
+      addressLine1,
+      addressLine2,
+      job,
+      noOfYearExp,
+      prefferedLocation,
+      heardFrom,
+      noticePeriod,
+    })
+    
+    if (response) {
+      upload(req, res, (err) => {
+        if(err) {
+          res.status(400).send("Something went wrong!");
+        }
+        res.send(200);
+      })
+    }
+  } catch (error) {
     res.sendStatus(304)
-  })
+  }
 })
 
 export default router
