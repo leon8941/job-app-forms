@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  	provider = "prisma-client-js"
+}
+
+datasource db {
+	provider = "postgresql"
+	url      = env("DATABASE_URL")
+}
+
+model Job {
+	id            	Int      				 @id @default(autoincrement())
+	title						String
+	jobApplications	JobApplication[] 
+	createdAt 			DateTime      	 @map("created_at") @default(now())
+	updatedAt 			DateTime      	 @map("updated_at") @updatedAt
+
+	@@map("jobs")
+}
+
+model Location {
+	id            	Int      				@id @default(autoincrement())
+	name						String
+	jobApplications	JobApplication[]
+	createdAt 			DateTime      	@map("created_at") @default(now())
+	updatedAt 			DateTime      	@map("updated_at") @updatedAt
+
+	@@map("locations")
+}
+
+enum HeardFrom {
+	SEARCH
+	RANDSTAND_STAFF
+	ADVERTISEMENT
+	FRIENDS
+}
+
+model JobApplication {
+	id            	Int      				@id @default(autoincrement())
+	email         	String   				
+	firstName				String					@map("first_name")
+	lastName				String					@map("last_name")
+	noOfYearExp			Int							@map("no_of_year_exp")
+	noticePeriod		Int							@map("notice_period")
+	contactNo				String					@map("contact_no")
+	addressLine1	  String
+	addressLine2	  String
+	heardFrom				HeardFrom					
+	locationId			Int							@map("location_id")
+	location				Location				@relation(fields: [locationId], references: [id])
+	jobId						Int							@map("job_id")
+	job 						Job							@relation(fields: [jobId], references: [id])
+	createdAt 			DateTime      	@map("created_at") @default(now())
+	updatedAt 			DateTime      	@map("updated_at") @updatedAt
+
+	@@map("job_applications")
+}
