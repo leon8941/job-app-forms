@@ -29,7 +29,8 @@
         "rootDir": "./"
     },
     "include": [
-        "backend/**/*"
+        "src/**/*",
+        "index.ts",
     ],
     "exclude": ["node_modules", "build"]
 }

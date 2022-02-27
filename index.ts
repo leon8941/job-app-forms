@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 
-import jobApplications from './routes/jobApplication'
+import jobApplications from './src/routes/jobApplication'
 
 const app = express()
 const port = 3001
