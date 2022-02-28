@@ -5,7 +5,7 @@ import { IJobApplicationInterface } from '../dto/IJobApplication'
 import { getJobs, getLocations, getHeardFroms, createJobApplication } from '../services'
 
 const router = express.Router()
-const upload = multer().single("resume");
+const upload = multer()
 
 router.get('/jobs', (_, res) => {
   getJobs().then((dbResponse) => {
@@ -36,6 +36,10 @@ router.get('/heardFroms', (_, res) => {
   }
 })
 
+router.post('/resume', upload.single('file'), (_, res) => {
+  res.sendStatus(200)
+})
+
 router.post('/submitJobApplication', async (req, res) =>  {
   const {
     firstName,
@@ -49,13 +53,11 @@ router.post('/submitJobApplication', async (req, res) =>  {
     prefferedLocation,
     heardFrom,
     noticePeriod,
-    file
+    fileName
   } : IJobApplicationInterface = req.body
 
-  console.log('FIles', file)
-
   try {
-    const response = await createJobApplication({
+    await createJobApplication({
       firstName,
       lastName,
       email,
@@ -67,16 +69,10 @@ router.post('/submitJobApplication', async (req, res) =>  {
       prefferedLocation,
       heardFrom,
       noticePeriod,
+      fileName
     })
     
-    if (response) {
-      upload(req, res, (err) => {
-        if(err) {
-          res.status(400).send("Something went wrong!");
-        }
-        res.send(200);
-      })
-    }
+    res.sendStatus(200);
   } catch (error) {
     res.sendStatus(304)
   }

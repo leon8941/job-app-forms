@@ -47,7 +47,8 @@ model JobApplication {
 	contactNo				String					@map("contact_no")
 	addressLine1	  String
 	addressLine2	  String
-	heardFrom				HeardFrom					
+	heardFrom				HeardFrom				
+	resumeFileName  String?			
 	locationId			Int							@map("location_id")
 	location				Location				@relation(fields: [locationId], references: [id])
 	jobId						Int							@map("job_id")

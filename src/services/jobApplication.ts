@@ -17,9 +17,8 @@ export const createJobApplication = async (payload: IJobApplicationInterface) =>
     heardFrom,
     prefferedLocation,
     job,
+    fileName,
   } = payload
-
-  // console.log('payload', payload)
 
   const result = await prisma.jobApplication.create({
     data: {
@@ -31,6 +30,7 @@ export const createJobApplication = async (payload: IJobApplicationInterface) =>
       contactNo: contactNo,
       addressLine1: addressLine1,
       addressLine2: addressLine2,
+      resumeFileName: fileName,
       job: {
         connect: {
           id: parseInt(job)
